@@ -1,50 +1,52 @@
-import kivy
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
-import pyautogui
-
-class MyBoxLayout(BoxLayout):
-    def __init__(self, **kwargs):
-        super(MyBoxLayout, self).__init__(**kwargs)
-        
-        # Set the orientation of the BoxLayout to vertical
-        self.orientation = 'vertical'
-        
-        # Create a horizontal BoxLayout for each row of buttons
-        for i in range(2):
-            row_layout = BoxLayout(size_hint=(None, None), height=200)
-            row_layout.spacing = 10
-            row_layout.padding = [10, 0, 10, 0]
-
-            # Add two buttons to each row
-            button1 = Button(text='Button 1', size_hint=(None, 1), width=300)
-            button2 = Button(text='Button 2', size_hint=(None, 1), width=300)
-            row_layout.add_widget(button1)
-            row_layout.add_widget(button2)
-
-            # Add the row layout to the main layout
-            self.add_widget(row_layout)
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
+from kivy.uix.image import Image
 
 class MyApp(App):
     def build(self):
-        layout = MyBoxLayout()
+        # Create a layout to hold the buttons
+        layout = BoxLayout(orientation='vertical')
+
+        # Create the first button with a callback function
+        button1 = Button(text="Press Me 1", on_press=self.show_image)
+
+        # Create the second button with a different callback function
+        button2 = Button(text="Press Me 2", on_press=self.show_message)
+
+        # Add both buttons to the layout
+        layout.add_widget(button1)
+        layout.add_widget(button2)
+
         return layout
 
-    def on_start(self):
-        if self.root_window:
-            # Get the size of the screen
-            screen_width, screen_height = pyautogui.size()
+    def show_image(self, instance):
+        # Create a popup window
+        popup = Popup(title='My Image', size_hint=(None, None), size=(400, 400))
 
-            # Calculate the window size and position for a 16:9 aspect ratio
-            window_width = int(screen_height * 16 / 9)
-            window_height = screen_height
-            window_x = int((screen_width - window_width) / 2)
-            window_y = 0
+        # Create an image widget
+        image = Image(source='image.jpg')
 
-            # Set the position and size of the app window
-            self.root_window.position = (window_x, window_y)
-            self.root_window.size = (window_width, window_height)
+        # Add the image widget to the popup
+        popup.add_widget(image)
+
+        # Open the popup
+        popup.open()
+
+    def show_message(self, instance):
+        # Create a popup window
+        popup = Popup(title='My Message', size_hint=(None, None), size=(400, 400))
+
+        # Create a label widget
+        label = Label(text='Hello, world!')
+
+        # Add the label widget to the popup
+        popup.add_widget(label)
+
+        # Open the popup
+        popup.open()
 
 if __name__ == '__main__':
     MyApp().run()
